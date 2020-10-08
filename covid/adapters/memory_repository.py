@@ -12,11 +12,11 @@ from covid.domain.model import Article, Tag, User, Comment, make_tag_association
 
 
 class MemoryRepository(AbstractRepository):
-    # Articles ordered by date, not id. id is assumed unique.
+    # Movies ordered by date, not id. id is assumed unique.
 
     def __init__(self):
-        self._articles = list()
-        self._articles_index = dict()
+        self._movies = list()
+        self._movies_index = dict()
         self._tags = list()
         self._users = list()
         self._comments = list()
@@ -27,21 +27,21 @@ class MemoryRepository(AbstractRepository):
     def get_user(self, username) -> User:
         return next((user for user in self._users if user.username == username), None)
 
-    def add_article(self, article: Article):
-        insort_left(self._articles, article)
-        self._articles_index[article.id] = article
+    def add_movie(self, movie: Movie):
+        insort_left(self._movies, movie)
+        self._movies_index[movie.id] = movie
 
-    def get_article(self, id: int) -> Article:
-        article = None
+    def get_movie(self, id: int) -> Movie:
+        movie = None
 
         try:
-            article = self._articles_index[id]
+            movie = self._movies_index[id]
         except KeyError:
             pass  # Ignore exception and return None.
 
         return article
 
-    def get_articles_by_date(self, target_date: date) -> List[Article]:
+    def get_movies_by_date(self, target_date: date) -> List[Movie]: #import domain model stuff, change to get_movies_by_name? idk
         target_article = Article(
             date=target_date,
             title=None,
@@ -64,8 +64,8 @@ class MemoryRepository(AbstractRepository):
 
         return matching_articles
 
-    def get_number_of_articles(self):
-        return len(self._articles)
+    def get_number_of_movies(self):
+        return len(self._movies)
 
     def get_first_article(self):
         article = None
