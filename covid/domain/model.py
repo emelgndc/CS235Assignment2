@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from typing import List, Iterable
+from covid.domain.movie import Movie
 
 
 class User:
@@ -153,25 +154,25 @@ class Tag:
             self, tag_name: str
     ):
         self._tag_name: str = tag_name
-        self._tagged_articles: List[Article] = list()
+        self._tagged_movies: List[Movie] = list()
 
     @property
     def tag_name(self) -> str:
         return self._tag_name
 
     @property
-    def tagged_articles(self) -> Iterable[Article]:
-        return iter(self._tagged_articles)
+    def tagged_movies(self) -> Iterable[Movie]:
+        return iter(self._tagged_movies)
 
     @property
-    def number_of_tagged_articles(self) -> int:
-        return len(self._tagged_articles)
+    def number_of_tagged_movies(self) -> int:
+        return len(self._tagged_movies)
 
-    def is_applied_to(self, article: Article) -> bool:
-        return article in self._tagged_articles
+    def is_applied_to(self, movie: Movie) -> bool:
+        return movie in self._tagged_movies
 
-    def add_article(self, article: Article):
-        self._tagged_articles.append(article)
+    def add_movie(self, movie: Movie):
+        self._tagged_movies.append(movie)
 
     def __eq__(self, other):
         if not isinstance(other, Tag):
@@ -191,9 +192,9 @@ def make_comment(comment_text: str, user: User, article: Article, timestamp: dat
     return comment
 
 
-def make_tag_association(article: Article, tag: Tag):
-    if tag.is_applied_to(article):
-        raise ModelException(f'Tag {tag.tag_name} already applied to Article "{article.title}"')
+def make_tag_association(movie: Movie, tag: Tag):
+    if tag.is_applied_to(movie):
+        raise ModelException(f'Tag {tag.tag_name} already applied to Movie "{movie.title}"')
 
-    article.add_tag(tag)
-    tag.add_article(article)
+    movie.add_tag(tag)
+    tag.add_movie(movie)
