@@ -2,13 +2,7 @@ import abc
 from typing import List
 from datetime import date
 
-from covid.domain.actor import Actor
-from covid.domain.director import Director
-from covid.domain.genre import Genre
-from covid.domain.review import Review
-from covid.domain.movie import Movie
-from covid.domain.user import User
-from covid.domain.model import Tag
+from covid.domain.model import Actor, Director, Genre, Movie, Review, User, Tag
 
 
 repo_instance = None
@@ -41,20 +35,20 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_movie(self, rank: int) -> Movie:
-        """ Returns movie with rank (index) from the repository.
+    def get_movie(self, id: int) -> Movie:
+        """ Returns movie with id from the repository.
 
-        If there is no movie with the given rank, this method returns None.
+        If there is no movie with given id, this method returns None.
         """
         raise NotImplementedError
 
-    # @abc.abstractmethod
-    # def get_movies_by_date(self, target_date: date) -> List[movie]:
-    #     """ Returns a list of movies that were published on target_date.
-    #
-    #     If there are no movies on the given date, this method returns an empty list.
-    #     """
-    #     raise NotImplementedError
+    @abc.abstractmethod
+    def get_movies_by_year(self, year: int) -> List[Movie]:
+        """ Returns a list of movies that were published in year.
+
+        If there are no movies on the given date, this method returns an empty list.
+        """
+        raise NotImplementedError
 
     @abc.abstractmethod
     def get_number_of_movies(self):
@@ -63,7 +57,7 @@ class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
     def get_first_movie(self) -> Movie:
-        """ Returns the first movie, ordered by rank, from the repository.
+        """ Returns the first movie, alphabetically ordered, from the repository.
 
         Returns None if the repository is empty.
         """
@@ -71,7 +65,7 @@ class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
     def get_last_movie(self) -> Movie:
-        """ Returns the last movie, ordered by rank, from the repository.
+        """ Returns the last movie, alphabetically ordered, from the repository.
 
         Returns None if the repository is empty.
         """
@@ -125,13 +119,13 @@ class AbstractRepository(abc.ABC):
     def add_review(self, review: Review):
         """ Adds a review to the repository.
 
-        If the review doesn't have bidirectional links with an movie and a User, this method raises a
+        If the Review doesn't have bidirectional links with a Movie and a User, this method raises a
         RepositoryException and doesn't update the repository.
         """
         if review.user is None or review not in review.user.reviews:
-            raise RepositoryException('review not correctly attached to a User')
+            raise RepositoryException('Review not correctly attached to a User')
         if review.movie is None or review not in review.movie.reviews:
-            raise RepositoryException('review not correctly attached to an movie')
+            raise RepositoryException('Review not correctly attached to an Movie')
 
     @abc.abstractmethod
     def get_reviews(self):

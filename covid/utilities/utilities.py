@@ -18,9 +18,9 @@ def get_tags_and_urls():
     return tag_urls
 
 
-def get_selected_articles(quantity=3):
-    articles = services.get_random_articles(quantity, repo.repo_instance)
+def get_selected_movies(quantity=3):
+    movies = services.get_random_movies(quantity, repo.repo_instance)
 
-    for article in articles:
-        article['hyperlink'] = url_for('news_bp.articles_by_date', date=article['date'].isoformat())
-    return articles
+    for movie in movies:
+        movie['hyperlink'] = url_for('news_bp.movies_by_date', date=movie['date'].isoformat())
+    return movie

@@ -11,6 +11,6 @@ home_blueprint = Blueprint(
 def home():
     return render_template(
         'home/home.html',
-        selected_articles=utilities.get_selected_articles(),
+        selected_articles=utilities.get_selected_movies(),
         tag_urls=utilities.get_tags_and_urls()
     )

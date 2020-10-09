@@ -1,16 +1,13 @@
 import csv
 
-from covid.domain.movie import Movie
-from covid.domain.actor import Actor
-from covid.domain.genre import Genre
-from covid.domain.director import Director
+from covid.domain.model import Movie, Actor, Genre, Director
 
 
 class MovieFileCSVReader:
 
     def __init__(self, file_name: str):
         self.__file_name = file_name
-        self.__dataset_of_movies = set([])
+        self.__dataset_of_movies = list()
         self.__dataset_of_actors = set([])
         self.__dataset_of_directors = set([])
         self.__dataset_of_genres = set([])
@@ -19,10 +16,11 @@ class MovieFileCSVReader:
         with open(self.__file_name, mode='r', encoding='utf-8-sig') as csvfile:
             movie_file_reader = csv.DictReader(csvfile)
 
-            index = 0
             for row in movie_file_reader:
                 title = row['Title']
                 release_year = int(row['Year'])
+                description = row['Description']
+                time = int(row['Runtime (Minutes)'])
                 movie = Movie(title, release_year)
 
                 actors1 = row['Actors'].split(",")
@@ -37,7 +35,15 @@ class MovieFileCSVReader:
                 for i in genres1:
                     genres2.append(Genre(i))
 
-                self.__dataset_of_movies.add(movie)
+                movie.director = director
+                movie.description = description
+                movie.actors = actors2
+                movie.genres = genres2
+                movie.runtime_minutes = time
+
+
+                #Adding to datasets
+                self.__dataset_of_movies.append(movie)
 
                 for actor in actors2:
                     self.__dataset_of_actors.add(actor)
@@ -46,8 +52,6 @@ class MovieFileCSVReader:
 
                 for genre in genres2:
                     self.__dataset_of_genres.add(genre)
-
-                index += 1
 
     @property
     def dataset_of_movies(self):

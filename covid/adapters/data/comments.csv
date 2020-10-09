@@ -1,4 +1,4 @@
-id,author-id,article-id,comment-text,timestamp
-1,2,1,"Oh no, COVID-19 has hit New Zealand",2020-02-28 14:31:26
-2,1,1,"Yeah Freddie, bad news",2020-02-28 14:39:51
-3,3,1,"I hope it's not as bad here as Italy!",2020-02-29 08:12:08
+id,user-id,movie-id,review-text,rating,timestamp
+1,2,1,"I LOVE THIS MOVIE!!!",9,2020-02-28 14:31:26
+2,1,1,"doo doo actors",2,2020-02-28 14:39:51
+3,3,1,"i just want to sleep man please work",5,2020-02-29 08:12:08
