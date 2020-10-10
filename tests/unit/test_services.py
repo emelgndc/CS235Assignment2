@@ -2,10 +2,10 @@ from datetime import date
 
 import pytest
 
-from covid.authentication.services import AuthenticationException
-from covid.news import services as news_services
-from covid.authentication import services as auth_services
-from covid.news.services import NonExistentArticleException
+from cs235flix.authentication.services import AuthenticationException
+from cs235flix.news import services as news_services
+from cs235flix.authentication import services as auth_services
+from cs235flix.news.services import NonExistentArticleException
 
 
 def test_can_add_user(in_memory_repo):

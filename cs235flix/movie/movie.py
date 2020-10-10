@@ -8,19 +8,19 @@ from flask_wtf import FlaskForm
 from wtforms import TextAreaField, HiddenField, SubmitField
 from wtforms.validators import DataRequired, Length, ValidationError
 
-import covid.adapters.repository as repo
-import covid.utilities.utilities as utilities
-import covid.news.services as services
+import cs235flix.adapters.repository as repo
+import cs235flix.utilities.utilities as utilities
+import cs235flix.movie.services as services
 
-from covid.authentication.authentication import login_required
+from cs235flix.authentication.authentication import login_required
 
 
 # Configure Blueprint.
-news_blueprint = Blueprint(
-    'news_bp', __name__)
+movie_blueprint = Blueprint(
+    'movie_bp', __name__)
 
 
-# @news_blueprint.route('/movies_by_date', methods=['GET'])
+# @movie_blueprint.route('/movies_by_date', methods=['GET'])
 # def movies_by_date():
 #     # Read query parameters.
 #     target_date = request.args.get('date')
@@ -89,7 +89,7 @@ news_blueprint = Blueprint(
 #     return redirect(url_for('home_bp.home'))
 
 
-@news_blueprint.route('/movies_by_tag', methods=['GET'])
+@movie_blueprint.route('/movies_by_tag', methods=['GET'])
 def movies_by_tag():
     movies_per_page = 30
 
@@ -158,7 +158,7 @@ def movies_by_tag():
     )
 
 
-@news_blueprint.route('/comment', methods=['GET', 'POST'])
+@movie_blueprint.route('/comment', methods=['GET', 'POST'])
 @login_required
 def comment_on_movie():
     # Obtain the username of the currently logged in user.

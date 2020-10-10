@@ -1,9 +1,9 @@
 import os
 import pytest
 
-from covid import create_app
-from covid.adapters import memory_repository
-from covid.adapters.memory_repository import MemoryRepository
+from cs235flix import create_app
+from cs235flix.adapters import memory_repository
+from cs235flix.adapters.memory_repository import MemoryRepository
 
 
 TEST_DATA_PATH = os.path.join('E:', os.sep, '235', 'CS235Assignment2', 'tests', 'data')

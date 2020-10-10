@@ -7,9 +7,9 @@ from bisect import bisect, bisect_left, insort_left
 
 from werkzeug.security import generate_password_hash
 
-from covid.adapters.repository import AbstractRepository, RepositoryException
-from covid.domain.model import Actor, Director, Genre, Movie, Review, User, Tag, make_tag_association, make_review
-from covid.datafilereaders.movie_file_csv_reader import MovieFileCSVReader
+from cs235flix.adapters.repository import AbstractRepository, RepositoryException
+from cs235flix.domain.model import Actor, Director, Genre, Movie, Review, User, Tag, make_tag_association, make_review
+from cs235flix.datafilereaders.movie_file_csv_reader import MovieFileCSVReader
 
 
 class MemoryRepository(AbstractRepository):
@@ -176,8 +176,7 @@ def read_csv_file(filename: str):
 
 
 def load_movies_and_tags(data_path: str, repo: MemoryRepository):
-    file = MovieFileCSVReader(data_path + "/Data1000Movies.csv")
-    #file = MovieFileCSVReader(data_path + "/Data30MoviesTEST.csv")
+    file = MovieFileCSVReader(data_path + "/movies.csv")
 
     file.read_csv_file()
 

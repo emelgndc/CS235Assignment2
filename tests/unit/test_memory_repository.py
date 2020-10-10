@@ -3,8 +3,8 @@ from typing import List
 
 import pytest
 
-from covid.domain.model import Actor, Genre, Director, Movie, User, Tag, Review, make_review
-from covid.adapters.repository import RepositoryException
+from cs235flix.domain.model import Actor, Genre, Director, Movie, User, Tag, Review, make_review
+from cs235flix.adapters.repository import RepositoryException
 
 
 def test_repository_can_add_a_user(in_memory_repo):

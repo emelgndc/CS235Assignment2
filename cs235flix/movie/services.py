@@ -1,7 +1,7 @@
 from typing import List, Iterable
 
-from covid.adapters.repository import AbstractRepository
-from covid.domain.model import make_review, Movie, Review, Tag
+from cs235flix.adapters.repository import AbstractRepository
+from cs235flix.domain.model import make_review, Movie, Review, Tag
 
 
 class NonExistentMovieException(Exception):

@@ -1,6 +1,6 @@
 from datetime import date
 
-from covid.domain.model import User, Article, Tag, make_comment, make_tag_association, ModelException
+from cs235flix.domain.model import User, Article, Tag, make_comment, make_tag_association, ModelException
 
 import pytest
 

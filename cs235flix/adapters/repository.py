@@ -2,7 +2,7 @@ import abc
 from typing import List
 from datetime import date
 
-from covid.domain.model import Actor, Director, Genre, Movie, Review, User, Tag
+from cs235flix.domain.model import Actor, Director, Genre, Movie, Review, User, Tag
 
 
 repo_instance = None

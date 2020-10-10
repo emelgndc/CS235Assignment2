@@ -8,9 +8,9 @@ from password_validator import PasswordValidator
 
 from functools import wraps
 
-import covid.utilities.utilities as utilities
-import covid.authentication.services as services
-import covid.adapters.repository as repo
+import cs235flix.utilities.utilities as utilities
+import cs235flix.authentication.services as services
+import cs235flix.adapters.repository as repo
 
 # Configure Blueprint.
 authentication_blueprint = Blueprint(
@@ -40,8 +40,8 @@ def register():
         form=form,
         username_error_message=username_not_unique,
         handler_url=url_for('authentication_bp.register'),
-        selected_articles=utilities.get_selected_articles(),
-        tag_urls=utilities.get_tags_and_urls()
+        #selected_articles=utilities.get_selected_articles(),
+        #tag_urls=utilities.get_tags_and_urls()
     )
 
 
@@ -55,15 +55,17 @@ def login():
         # Successful POST, i.e. the username and password have passed validation checking.
         # Use the service layer to lookup the user.
         try:
-            user = services.get_user(form.username.data, repo.repo_instance)
+            # Usernames are converted to lowercase, so we need to use .lower()
+            user = services.get_user(form.username.data.lower(), repo.repo_instance)
 
             # Authenticate user.
-            services.authenticate_user(user['username'], form.password.data, repo.repo_instance)
+            services.authenticate_user(user['user_name'], form.password.data, repo.repo_instance)
 
             # Initialise session and redirect the user to the home page.
             session.clear()
-            session['username'] = user['username']
+            session['user_name'] = user['user_name']
             return redirect(url_for('home_bp.home'))
+            #return "logged in"
 
         except services.UnknownUserException:
             # Username not known to the system, set a suitable error message.
@@ -80,8 +82,8 @@ def login():
         username_error_message=username_not_recognised,
         password_error_message=password_does_not_match_username,
         form=form,
-        selected_articles=utilities.get_selected_articles(),
-        tag_urls=utilities.get_tags_and_urls()
+        #selected_articles=utilities.get_selected_articles(),
+        #tag_urls=utilities.get_tags_and_urls()
     )
 
 

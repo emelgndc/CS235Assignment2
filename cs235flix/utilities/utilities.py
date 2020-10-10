@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session
 
-import covid.adapters.repository as repo
-import covid.utilities.services as services
+import cs235flix.adapters.repository as repo
+import cs235flix.utilities.services as services
 
 
 # Configure Blueprint.
@@ -21,6 +21,12 @@ def get_tags_and_urls():
 def get_selected_movies(quantity=3):
     movies = services.get_random_movies(quantity, repo.repo_instance)
 
-    for movie in movies:
-        movie['hyperlink'] = url_for('news_bp.movies_by_date', date=movie['date'].isoformat())
-    return movie
+    #for movie in movies:
+    #    movie['hyperlink'] = url_for('movie_bp.movies_by_date', date=movie['date'].isoformat())
+    return movies
+
+
+def get_movies(movie_count):
+    movies = services.get_movies(movie_count, repo.repo_instance)
+
+    return movies

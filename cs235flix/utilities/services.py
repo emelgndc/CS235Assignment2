@@ -1,8 +1,8 @@
 from typing import Iterable
 import random
 
-from covid.adapters.repository import AbstractRepository
-from covid.domain.model import Movie
+from cs235flix.adapters.repository import AbstractRepository
+from cs235flix.domain.model import Movie
 
 
 def get_tag_names(repo: AbstractRepository):
@@ -26,14 +26,38 @@ def get_random_movies(quantity, repo: AbstractRepository):
     return movies_to_dict(movies)
 
 
+def get_movies(movie_count: int, repo: AbstractRepository):
+    id_list = []
+    for i in range(1,movie_count):
+        id_list.append(i)
+
+    # Get movies.
+    movies = repo.get_movies_by_id(id_list)
+
+    return movies_to_dict(movies)
+
+
 # ============================================
 # Functions to convert dicts to model entities
 # ============================================
 
 def movie_to_dict(movie: Movie):
+    genres = []
+    for genre in movie.genres:
+        genres.append(genre.genre_name)
+    actors = []
+    for actor in movie.actors:
+        actors.append(actor.actor_full_name)
     movie_dict = {
         'year': movie.release_year,
         'title': movie.title,
+        'director': movie.director,
+        'description': movie.description,
+        'actors': actors,
+        'genres': genres,
+        'tags': movie.tags,
+        'length': movie.runtime_minutes,
+        'reviews': movie.reviews
         #'image_hyperlink': movie.image_hyperlink
     }
     return movie_dict

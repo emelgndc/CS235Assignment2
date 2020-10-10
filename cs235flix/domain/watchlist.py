@@ -1,4 +1,4 @@
-from covid.domain.movie import Movie
+from cs235flix.domain.movie import Movie
 
 class WatchList:
     def __init__(self):

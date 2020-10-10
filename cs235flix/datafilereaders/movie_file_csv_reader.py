@@ -1,6 +1,6 @@
 import csv
 
-from covid.domain.model import Movie, Actor, Genre, Director
+from cs235flix.domain.model import Movie, Actor, Genre, Director
 
 
 class MovieFileCSVReader:

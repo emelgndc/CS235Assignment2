@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from covid.adapters.repository import AbstractRepository
-from covid.domain.model import User
+from cs235flix.adapters.repository import AbstractRepository
+from cs235flix.domain.model import User
 
 
 class NameNotUniqueException(Exception):
@@ -54,7 +54,7 @@ def authenticate_user(user_name: str, password: str, repo: AbstractRepository):
 
 def user_to_dict(user: User):
     user_dict = {
-        'username': user.user_name,
+        'user_name': user.user_name,
         'password': user.password
     }
     return user_dict

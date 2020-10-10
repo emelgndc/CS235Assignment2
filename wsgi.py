@@ -1,5 +1,5 @@
 """App entry point."""
-from covid import create_app
+from cs235flix import create_app
 
 app = create_app()
 
