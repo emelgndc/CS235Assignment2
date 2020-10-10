@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block content %}
+<main id="main">
+  <h1>{{ title }}</h1>
+  <br>
+  <p style="text-align: center">
+    Welcome to your profile, {{ user.user_name }}.
+  </p>
+
+  <br>
+  <br>
+  <br>
+
+  <h2>Friends:</h2>
+  <ul>
+    {% for friend in user.friends %}
+    <li>{{ friend.user_name }}</li>
+    {% endfor %}
+    {% if user.friendnum == 0 %}
+    <li>You have no friends added. Sorry.</li>
+    {% endif %}
+  </ul>
+
+  <br>
+  <br>
+  <br>
+
+  <h2>Watched movies:</h2>
+  <ul>
+    {% for movie in user.watched_movies %}
+    <li>{{ movie.title }}, {{ movie.release_year }}</li>
+    {% endfor %}
+  </ul>
+</main>
+{% endblock %}

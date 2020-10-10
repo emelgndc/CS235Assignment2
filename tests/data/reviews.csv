@@ -3,3 +3,6 @@ id,user-id,movie-id,review-text,rating,timestamp
 2,1,1,doo doo actors,1,2020-02-28
 3,1,2,prometheus review here,10,2020-02-28
 4,1,2,another prometheus review,9,2020-02-28
+5,4,3,rev1,5,2020-02-28
+6,4,4,rev2,6,2020-02-28
+7,4,11,rev3,7,2020-02-28

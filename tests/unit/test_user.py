@@ -123,7 +123,7 @@ def test_accessing_non_friend(user, friend):
     thisisareview = Review(thisisamovie, "this is a review.", 9)
 
     thisisamovie.runtime_minutes = 69
-    friend.watch_movie(Movie("Garlic Bread", 2020))
+    friend.watch_movie(Movie("Garlic Bread", 2020), 35)
     friend.add_review(thisisareview)
     assert user.see_friend_watched_movies(friend) is None
     assert user.see_friend_reviews(friend) is None
@@ -134,7 +134,7 @@ def test_accessing_non_friend(user, friend):
 def test_see_friend_watched_movies(user, friend):
     user.send_friend_request(friend)
     friend.accept_pending_request(user)
-    friend.watch_movie(Movie("Garlic Bread", 2020))
+    friend.watch_movie(Movie("Garlic Bread", 2020), 35)
     assert user.see_friend_watched_movies(friend) == [Movie("Garlic Bread", 2020)]
 
 
@@ -151,5 +151,5 @@ def test_see_friend_minutes_watched(user, friend):
     friend.accept_pending_request(user)
     thisisamovie = Movie("Garlic Bread", 2020)
     thisisamovie.runtime_minutes = 69
-    friend.watch_movie(thisisamovie)
+    friend.watch_movie(thisisamovie, 35)
     assert user.see_friend_minutes_watched(friend) == 69

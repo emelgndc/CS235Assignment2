@@ -57,6 +57,18 @@ def get_movie_ids_for_tag(tag_name, repo: AbstractRepository):
     return movie_ids
 
 
+def get_movie_ids_for_actor(name, repo: AbstractRepository):
+    movie_ids = repo.get_movie_ids_for_actor(name)
+
+    return movie_ids
+
+
+def get_movie_ids_for_director(name, repo: AbstractRepository):
+    movie_ids = repo.get_movie_ids_for_director(name)
+
+    return movie_ids
+
+
 def get_movies_by_id(id_list, repo: AbstractRepository):
     movies = repo.get_movies_by_id(id_list)
 
@@ -138,3 +150,11 @@ def dict_to_movie(dict):
     movie = Movie(dict.title, dict.year)
     # Note there's no reviews or tags.
     return movie
+
+
+def get_watched(user_name: str, repo: AbstractRepository):
+    id_list = repo.get_watched_ids(user_name)
+    watched = repo.get_watched(user_name)
+
+    #return movies_to_dict(watched, id_list, repo)
+    return id_list

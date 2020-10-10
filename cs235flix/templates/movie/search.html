@@ -1,9 +1,16 @@
-<aside id="sidebar">
+{% extends 'layout.html' %}
 
+{% block content %}
+
+<main id="main">
     <header>
-        <h1>Search</h1>
+        <h1>{{title}}</h1>
     </header>
-    <form action="{{search_url}}" method="post">
+    <br>
+    <br>
+    <div style="clear:both">
+        <div class="form-wrapper">
+            <form action="{{handler_url}}" method="post">
                 {{form.csrf_token}} <!-- Need to include this token - Flask WTForms requires it. -->
                 <br>
                 <div class ="form-field">
@@ -11,7 +18,7 @@
                     <br>
                     {{form.searching_for(class="select")}}
                     <br>
-                    {{form.search(size = 10, placeholder="type a name", class="textarea", cols="1", rows="1", wrap="hard")}}
+                    {{form.search(size = 1, placeholder="type their name here", class="textarea", cols="1", rows="5", wrap="hard")}}
                     {% if form.search.errors %}
                         <ul class="errors">
         	            {% for error in form.search.errors %}
@@ -22,5 +29,8 @@
                 </div>
                 {{ form.submit }}
             </form>
-
-</aside>
+        </div>
+    </div>
+    {{ none_message }}
+</main>
+{% endblock %}

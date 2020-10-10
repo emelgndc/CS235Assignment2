@@ -87,6 +87,36 @@ def test_review(client, auth):
     assert response.headers['Location'] == 'http://localhost/browse?cursor=0&view_reviews_for=2'
 
 
+def test_search(client, auth):
+    # Check that we can retrieve the search page.
+    response = client.get('/search')
+
+    response = client.post(
+        '/search',
+        data={'search': 'Chris Pratt', 'searching_for': "Actor"}
+    )
+
+    # Check that we have been redirected to the correct page.
+    assert response.headers['Location'] == 'http://localhost/browse?search=Chris+Pratt&type=Actor'
+
+
+def test_search_with_no_results(client, auth):
+    # Check that we can retrieve the search page.
+    response = client.get('/search')
+
+    response = client.post(
+        '/search',
+        data={'search': 'garlic bread', 'searching_for': "Actor"}
+    )
+
+    # Check that we have been redirected to the correct page.
+    assert response.headers['Location'] == 'http://localhost/browse?search=Garlic+Bread&type=Actor'
+
+    response = client.get('http://localhost/browse?search=Garlic+Bread&type=Actor')
+
+    assert b'/search?none=True' in response.data
+
+
 @pytest.mark.parametrize(('review', 'rating', 'messages'), (
         ('Who thinks Trump is a fuckwit?', '5', (b'Your review must not contain profanity')),
         ('Hey', '3', (b'Your review is too short')),
@@ -133,6 +163,16 @@ def test_movies_with_review(client):
 
     # Check that all reviews for specified movie are included on the page.
     assert b'doo doo actors' in response.data
+    assert b'thorke' in response.data
+
+
+def test_searched_movies_with_review(client):
+    # Check that we can retrieve the searched movies page with reviews.
+    response = client.get('http://localhost/browse?search=Ridley+Scott&type=Director&cursor=0&view_reviews_for=2')
+    assert response.status_code == 200
+
+    # Check that all reviews for specified movie are included on the page.
+    assert b'another prometheus review' in response.data
     assert b'thorke' in response.data
 
 

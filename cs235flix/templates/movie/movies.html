@@ -58,6 +58,11 @@
                 <button class="btn-general" onclick="location.href='{{ movie.view_review_url }}'">{{ movie.reviews|length }} reviews</button>
             {% endif %}
             <button class="btn-general" onclick="location.href='{{ movie.add_review_url }}'">Review</button>
+            {% if watchbtn == "yes" %}
+                {% if movie.id not in watched %}
+                    <button class="btn-general" onclick="location.href='{{ movie.watch_url }}'">Watch!</button>
+                {% endif %}
+            {% endif %}
         </div>
         {% if movie.id == show_reviews_for_movie %}
         <div>

@@ -87,23 +87,15 @@ class AbstractRepository(abc.ABC):
         """
         raise NotImplementedError
 
-    # @abc.abstractmethod
-    # def get_date_of_previous_movie(self, movie: Movie):
-    #     """ Returns the date of an movie that immediately precedes movie.
-    #
-    #     If movie is the first movie in the repository, this method returns None because there are no movies
-    #     on a previous date.
-    #     """
-    #     raise NotImplementedError
-    #
-    # @abc.abstractmethod
-    # def get_date_of_next_movie(self, movie: Movie):
-    #     """ Returns the date of an movie that immediately follows movie (i.e. lower rank).
-    #
-    #     If movie is the last movie in the repository, this method returns None because there are no movies
-    #     on a later date.
-    #     """
-    #     raise NotImplementedError
+    @abc.abstractmethod
+    def get_movie_ids_for_actor(self, name: str):
+        """ Returns a list of ids representing movies that have actor 'name' in it."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_movie_ids_for_director(self, director_name: str):
+        """ Returns a list of ids representing movies that have director 'name'."""
+        raise NotImplementedError
 
     @abc.abstractmethod
     def add_tag(self, tag: Tag):
@@ -111,7 +103,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_tags(self) -> List[Tag]: #just put all of directors/actors/genres into tags list. search by movie OR tag.
+    def get_tags(self) -> List[Tag]:
         """ Returns the Tags stored in the repository. """
         raise NotImplementedError
 
@@ -137,6 +129,22 @@ class AbstractRepository(abc.ABC):
         """ Returns the index of movie stored in the repository. """
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def get_review_num_of_user(self, user: User):
+        """ Returns number of reviews of user """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_watched(self, user_name: str):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_watched_ids(self, user_name: str):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_watched_ids(self, user_name, movie: Movie, id: int):
+        raise NotImplementedError
 
 
 

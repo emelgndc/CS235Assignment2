@@ -26,9 +26,16 @@ class MemoryRepository(AbstractRepository):
 
     def get_user(self, username) -> User:
         user = None
-        #print(self._users)
         for i in range(len(self._users)):
             if self._users[i].user_name == username:
+                user = self._users[i]
+                break
+        return user
+
+    def get_user_by_id(self, id) -> User:
+        user = None
+        for i in range(len(self._users)):
+            if self._users[i].id == id:
                 user = self._users[i]
                 break
         return user
@@ -48,13 +55,6 @@ class MemoryRepository(AbstractRepository):
         return movie
 
     def get_movies_by_year(self, year: int):
-        # target_movie = Movie(
-        #     date=target_date,
-        #     title=None,
-        #     first_para=None,
-        #     hyperlink=None,
-        #     image_hyperlink=None
-        # )
         matching_movies = list()
 
         for movie in self._movies:
@@ -106,38 +106,35 @@ class MemoryRepository(AbstractRepository):
             # No Tag with name tag_name, so return an empty list.
             movie_ids = list()
 
-        #return sorted(movie_ids)
         return movie_ids
 
-    # def get_date_of_previous_movie(self, movie: Movie):
-    #     previous_date = None
-    #
-    #     try:
-    #         index = self.movie_index(movie)
-    #         for stored_movie in reversed(self._movies[0:index]):
-    #             if stored_movie.date < movie.date:
-    #                 previous_date = stored_movie.date
-    #                 break
-    #     except ValueError:
-    #         # No earlier movies, so return None.
-    #         pass
-    #
-    #     return previous_date
-    #
-    # def get_date_of_next_movie(self, movie: movie):
-    #     next_date = None
-    #
-    #     try:
-    #         index = self.movie_index(movie)
-    #         for stored_movie in self._movies[index + 1:len(self._movies)]:
-    #             if stored_movie.date > movie.date:
-    #                 next_date = stored_movie.date
-    #                 break
-    #     except ValueError:
-    #         # No subsequent movies, so return None.
-    #         pass
-    #
-    #     return next_date
+    def get_movie_ids_for_actor(self, name: str):
+        movies = []
+        for movie in self._movies:
+            for actor in movie.actors:
+                if actor.actor_full_name == name:
+                    movies.append(movie)
+                    break
+
+        if movies is not []:
+            movie_ids = [self.movie_index(movie) for movie in movies]
+        else:
+            movie_ids = list()
+
+        return movie_ids
+
+    def get_movie_ids_for_director(self, name: str):
+        movies = []
+        for movie in self._movies:
+            if movie.director.director_full_name == name:
+                movies.append(movie)
+
+        if movies is not []:
+            movie_ids = [self.movie_index(movie) for movie in movies]
+        else:
+            movie_ids = list()
+
+        return movie_ids
 
     def add_tag(self, tag: Tag):
         self._tags.append(tag)
@@ -151,6 +148,38 @@ class MemoryRepository(AbstractRepository):
 
     def get_reviews(self):
         return self._reviews
+
+    def get_reviews_for_user(self, user_name):
+        user = self.get_user(user_name)
+        return user.reviews
+
+    def get_review_num_of_user(self, user_name):
+        user = self.get_user(user_name)
+        return len(user.reviews)
+
+    def get_friends_for_user(self, user_name):
+        user = self.get_user(user_name)
+        return user.friends
+
+    def get_pending_friends_for_user(self, user_name):
+        user = self.get_user(user_name)
+        return user.pending_friends
+
+    def get_watched(self, user_name):
+        user = self.get_user(user_name)
+        return user.watched_movies
+
+    #def add_watched(self, user_name, movie: Movie):
+    #    user = self.get_user(user_name)
+    #    user.watch_movie(movie)
+
+    def get_watched_ids(self, user_name):
+        user = self.get_user(user_name)
+        return user.watched_ids
+
+    def add_watched_ids(self, user_name, movie: Movie, id: int):
+        user = self.get_user(user_name)
+        user.watch_movie(movie, id)
 
     # Helper method to return movie index.
     def movie_index(self, movie: Movie):
@@ -201,8 +230,42 @@ def load_users(data_path: str, repo: MemoryRepository):
             user_name=data_row[1],
             password=generate_password_hash(data_row[2])
         )
+
+        friends_ids = data_row[3].split(",")
+        if friends_ids == ['']:
+            pass
+        else:
+            user.friends_ids = friends_ids
+
+        pending_ids = data_row[4].split(",")
+        if pending_ids == ['']:
+            pass
+        else:
+            user.pending_friends_ids = pending_ids
+
+        user.id = int(data_row[0])
         repo.add_user(user)
         users[data_row[0]] = user
+
+        watched_ids = data_row[5].split(",")
+        if watched_ids == ['']:
+            pass
+        else:
+            int_ids = [int(x) for x in watched_ids]
+            user.watched_ids = int_ids
+            user.watched_movies = repo.get_movies_by_id(int_ids)
+
+    for key in users:
+        user = users[key]
+        friends = []
+        pending = []
+        for id in user.friends_ids:
+            friends.append(repo.get_user_by_id(int(id)))
+        for id2 in user.pending_friends_ids:
+            pending.append(repo.get_user_by_id(int(id2)))
+        user.friends = friends
+        user.pending_friends = pending
+
     return users
 
 

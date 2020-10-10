@@ -1,4 +1,8 @@
-id,username,password
-1,thorke,cLQ^C#oFXloS
-2,fmercury,mvNNbc1eLA$i
-3,emelg,thisisapassword
+id,username,password,friends_ids,pending_friends_ids,watched_ids
+1,thorke,cLQ^C#oFXloS,,,
+2,fmercury,mvNNbc1eLA$i,,,
+3,emelg,thisisapassword,,,
+4,admin,admin,"1, 2, 3","5, 6, 7","1,2,5,7,9"
+5,friend1,friend1,,4,
+6,friend2,friend2,,4,
+7,friend3,friend3,,4,

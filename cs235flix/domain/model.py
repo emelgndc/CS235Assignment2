@@ -15,10 +15,23 @@ class User:
             self.__password = password
 
         self.__friends = []
+        self.__friends_ids = []
         self.__pending_friends = []
+        self.__pending_friends_ids = []
         self.__watched_movies = []
+        self.__watched_ids = []
         self.__reviews = []
         self.__time_spent_watching_movies_minutes = 0
+        self.__id = None
+
+    @property
+    def id(self):
+        return self.__id
+
+    @id.setter
+    def id(self, id):
+        if type(id) is int:
+            self.__id = id
 
     @property
     def user_name(self):
@@ -42,9 +55,37 @@ class User:
     def friends(self):
         return self.__friends
 
+    @friends.setter
+    def friends(self, friends):
+        if type(friends) is list:
+            self.__friends = friends
+
     @property
     def pending_friends(self):
         return self.__pending_friends
+
+    @pending_friends.setter
+    def pending_friends(self, friends):
+        if type(friends) is list:
+            self.__pending_friends = friends
+
+    @property
+    def friends_ids(self):
+        return self.__friends
+
+    @friends_ids.setter
+    def friends_ids(self, friends):
+        if type(friends) is list:
+            self.__friends = friends
+
+    @property
+    def pending_friends_ids(self):
+        return self.__pending_friends_ids
+
+    @pending_friends_ids.setter
+    def pending_friends_ids(self, friends):
+        if type(friends) is list:
+            self.__pending_friends_ids = friends
 
     @property
     def watched_movies(self):
@@ -59,6 +100,20 @@ class User:
                     allmovies = False
             if allmovies:
                 self.__watched_movies = watched_movies
+
+    @property
+    def watched_ids(self):
+        return self.__watched_ids
+
+    @watched_ids.setter
+    def watched_ids(self, watched_ids):
+        allmovies = True
+        if type(watched_ids) is list:
+            for i in watched_ids:
+                if type(i) is not int:
+                    allmovies = False
+            if allmovies:
+                self.__watched_ids = watched_ids
 
     @property
     def reviews(self):
@@ -84,14 +139,19 @@ class User:
             if watchtime >= 0:
                 self.__time_spent_watching_movies_minutes = watchtime
 
-    def watch_movie(self, movie: 'Movie'):
+    def watch_movie(self, movie: 'Movie', id: int):
         if type(movie) is Movie:
             self.__watched_movies.append(movie)
+            self.__watched_ids.append(id)
             self.__time_spent_watching_movies_minutes += movie.runtime_minutes
 
     def add_review(self, review: 'Review'):
         if type(review) is Review:
             self.__reviews.append(review)
+
+    @property
+    def number_of_friends(self):
+        return len(self.__friends)
 
     def send_friend_request(self, recipient):
         if type(recipient) is User and self != recipient:

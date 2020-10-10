@@ -142,6 +142,29 @@ def test_get_movies_by_tag(in_memory_repo):
     assert as_dict[len(as_dict)-1]['id'] == 30
 
 
+def test_get_movies_by_actor(in_memory_repo):
+    target_name = "Chris Pratt"
+
+    id_list = movie_services.get_movie_ids_for_actor(target_name, in_memory_repo)
+    as_dict = movie_services.get_movies_by_id(id_list, in_memory_repo)
+
+    assert len(id_list) == 2
+    assert as_dict[0]['id'] == 1
+    assert as_dict[0]['title'] == "Guardians of the Galaxy"
+    assert as_dict[len(as_dict)-1]['id'] == 10
+
+
+def test_get_movies_by_director(in_memory_repo):
+    target_name = "M. Night Shyamalan"
+
+    id_list = movie_services.get_movie_ids_for_director(target_name, in_memory_repo)
+    as_dict = movie_services.get_movies_by_id(id_list, in_memory_repo)
+
+    assert len(id_list) == 1
+    assert as_dict[0]['id'] == 3
+    assert as_dict[0]['title'] == "Split"
+
+
 def test_get_movies_by_tag_with_non_existent_tag(in_memory_repo):
     target_tag = 'Banana'
 
@@ -149,6 +172,24 @@ def test_get_movies_by_tag_with_non_existent_tag(in_memory_repo):
     as_dict = movie_services.get_movies_by_id(id_list, in_memory_repo)
 
     # Check that there are no movies dated 2020-03-06.
+    assert len(as_dict) == 0
+
+
+def test_get_movies_by_actor_with_non_existent_actor(in_memory_repo):
+    target_name = "Garlic Bread"
+
+    id_list = movie_services.get_movie_ids_for_actor(target_name, in_memory_repo)
+    as_dict = movie_services.get_movies_by_id(id_list, in_memory_repo)
+
+    assert len(as_dict) == 0
+
+
+def test_get_movies_by_director_with_non_existent_director(in_memory_repo):
+    target_name = "IWant ToDie"
+
+    id_list = movie_services.get_movie_ids_for_tag(target_name, in_memory_repo)
+    as_dict = movie_services.get_movies_by_id(id_list, in_memory_repo)
+
     assert len(as_dict) == 0
 
 
@@ -179,12 +220,30 @@ def test_get_reviews_for_movie(in_memory_repo):
     assert 2 in movie_ids and len(movie_ids) == 1
 
 
+def test_get_friends_for_user(in_memory_repo):
+    friends_as_dict = auth_services.get_friends_of_user("admin", in_memory_repo)
+
+    assert len(friends_as_dict) == 3
+    print(friends_as_dict)
+    assert friends_as_dict[0]['user_name'] == 'thorke'
+
+
 def test_get_reviews_for_non_existent_movie(in_memory_repo):
     with pytest.raises(NonExistentMovieException):
         reviews_as_dict = movie_services.get_reviews_for_movie(31, in_memory_repo)
 
 
 def test_get_reviews_for_movie_without_reviews(in_memory_repo):
-    reviews_as_dict = movie_services.get_reviews_for_movie(3, in_memory_repo)
+    reviews_as_dict = movie_services.get_reviews_for_movie(15, in_memory_repo)
     assert len(reviews_as_dict) == 0
 
+
+def test_get_watched_for_user(in_memory_repo):
+    watched_as_dict = auth_services.get_watched("admin", in_memory_repo)
+    assert len(watched_as_dict) == 5
+
+
+def test_add_watched_for_user(in_memory_repo):
+    auth_services.add_watched("admin", 5, in_memory_repo)
+    assert len(auth_services.get_watched("admin", in_memory_repo)) == 6
+    assert auth_services.get_watched("admin", in_memory_repo)[0] == 1

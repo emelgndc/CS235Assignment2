@@ -22,21 +22,30 @@ movie_blueprint = Blueprint(
 
 @movie_blueprint.route('/browse', methods=['GET'])
 def browse():
+    if 'user_name' in session:
+        watchbtn = "yes"
+        watched = services.get_watched(session['user_name'], repo.repo_instance)
+    else:
+        watchbtn = "no"
+        watched = []
+
     movies_per_page = 10
     length = services.get_last_movie(repo.repo_instance)['id']
-    # Read query parameters.
+
+    searchStr = request.args.get('search')
+    searchFor = request.args.get('type')
     cursor = request.args.get('cursor')
-    if cursor is None:
-        cursor = 0
-    else:
-        cursor = int(cursor)
     movie_to_show_reviews = request.args.get('view_reviews_for')
 
     # Fetch the first and last movies in the series.
     first_movie = services.get_first_movie(repo.repo_instance)
     last_movie = services.get_last_movie(repo.repo_instance)
 
-    #TODO: do an implementation like this movie_ids = services.get_movie_ids_for_tag(tag_name, repo.repo_instance) but for actors etc
+    if cursor is None:
+        cursor = 0
+    else:
+        cursor = int(cursor)
+
     if movie_to_show_reviews is None:
         # No view-reviews query parameter, so set to a non-existent movie id.
         movie_to_show_reviews = -1
@@ -44,17 +53,21 @@ def browse():
         # Convert movie_to_show_reviews from string to int.
         movie_to_show_reviews = int(movie_to_show_reviews)
 
-    if cursor is None:
-        # No cursor query parameter, so initialise cursor to start at the beginning.
-        cursor = 0
-    else:
-        # Convert cursor from string to int.
-        cursor = int(cursor)
-
     id_list = []
-    # Fetch movie(s) for the target page
-    for i in range(cursor, cursor+movies_per_page):
-        id_list.append(i+1)
+    full_list = []
+    if searchStr and searchFor is not None:
+        if searchFor == "Actor":
+            full_list = services.get_movie_ids_for_actor(searchStr, repo.repo_instance)
+        elif searchFor == "Director":
+            full_list = services.get_movie_ids_for_director(searchStr, repo.repo_instance)
+        full_list = sorted(full_list)
+        length = len(full_list)
+        id_list = full_list[cursor:min(cursor+movies_per_page, length)]
+
+    else:
+        full_list.extend(range(1,length+1))
+        for i in range(cursor, cursor + movies_per_page):
+            id_list.append(i+1)
 
     movies = services.get_movies_by_id(id_list, repo.repo_instance)
 
@@ -64,25 +77,26 @@ def browse():
     prev_movie_url = None
 
     if len(movies) > 0:
-        # There's at least one movie for the target date.
-        if id_list[0] > 1:
+        # There's at least one movie in the list
+        if id_list[0] > full_list[0]:
             # There are movies with a lower id, so generate URLs for the 'previous' and 'first' navigation buttons.
-            prev_movie_url = url_for('movie_bp.browse', cursor=cursor-movies_per_page)
-            first_movie_url = url_for('movie_bp.browse')
+            prev_movie_url = url_for('movie_bp.browse', search=searchStr, type=searchFor, cursor=cursor-movies_per_page)
+            first_movie_url = url_for('movie_bp.browse', search=searchStr, type=searchFor)
 
-        # There are movies on a subsequent date, so generate URLs for the 'next' and 'last' navigation buttons.
-        if id_list[len(id_list)-1] < services.get_last_movie(repo.repo_instance)['id']:
-            next_movie_url = url_for('movie_bp.browse', cursor=cursor+movies_per_page)
+        # There are movies with a higher id, so generate URLs for the 'next' and 'last' navigation buttons.
+        if id_list[len(id_list)-1] < full_list[length-1]:
+            next_movie_url = url_for('movie_bp.browse', search=searchStr, type=searchFor, cursor=cursor+movies_per_page)
 
             last_cursor = movies_per_page * (length // movies_per_page)
             if length % movies_per_page == 0:
                 last_cursor -= movies_per_page
-            last_movie_url = url_for('movie_bp.browse',  cursor=last_cursor)
+            last_movie_url = url_for('movie_bp.browse', search=searchStr, type=searchFor, cursor=last_cursor)
 
         # Construct urls for viewing movie reviews and adding reviews.
         for movie in movies:
-            movie['view_review_url'] = url_for('movie_bp.browse', cursor=cursor, view_reviews_for=movie['id'])
+            movie['view_review_url'] = url_for('movie_bp.browse', search=searchStr, type=searchFor, cursor=cursor, view_reviews_for=movie['id'])
             movie['add_review_url'] = url_for('movie_bp.review_movie', movie=movie['id'])
+            movie['watch_url'] = url_for('authentication_bp.profile', watched=movie['id'])
 
         # Generate the webpage to display the movies.
         return render_template(
@@ -90,7 +104,8 @@ def browse():
             title='Movies',
             movies_title='Page ' + str(int(cursor/movies_per_page)+1),
             movies=movies,
-            #selected_movies=utilities.get_selected_movies(len(movies) * 2),
+            watched=watched,
+            watchbtn=watchbtn,
             tag_urls=utilities.get_tags_and_urls(),
             first_movie_url=first_movie_url,
             last_movie_url=last_movie_url,
@@ -100,11 +115,18 @@ def browse():
         )
 
     # No movies to show, so return the homepage.
-    return redirect(url_for('home_bp.home'))
+    return redirect(url_for('movie_bp.search_movie', none="True"))
 
 
 @movie_blueprint.route('/movies_by_tag', methods=['GET'])
 def movies_by_tag():
+    if 'user_name' in session:
+        watchbtn = "yes"
+        watched = services.get_watched(session['user_name'], repo.repo_instance)
+    else:
+        watchbtn = "no"
+        watched = []
+
     movies_per_page = 10
 
     # Read query parameters.
@@ -128,11 +150,9 @@ def movies_by_tag():
 
     # Retrieve movie ids for movies that are tagged with tag_name.
     movie_ids = services.get_movie_ids_for_tag(tag_name, repo.repo_instance)
-    #print(movie_ids)
 
     # Retrieve the batch of movies to display on the Web page.
     movies = services.get_movies_by_id(movie_ids[cursor:cursor + movies_per_page], repo.repo_instance)
-    #print(movies)
 
     first_movie_url = None
     last_movie_url = None
@@ -157,6 +177,7 @@ def movies_by_tag():
     for movie in movies:
         movie['view_review_url'] = url_for('movie_bp.movies_by_tag', tag=tag_name, cursor=cursor, view_reviews_for=movie['id'])
         movie['add_review_url'] = url_for('movie_bp.review_movie', movie=movie['id'], tag=tag_name)
+        movie['watch_url'] = url_for('authentication_bp.profile', watched=movie['id'])
 
     # Generate the webpage to display the movies.
     return render_template(
@@ -164,12 +185,54 @@ def movies_by_tag():
         title='Movies',
         movies_title='Movies tagged by ' + tag_name,
         movies=movies,
+        watched=watched,
         tag_urls=utilities.get_tags_and_urls(),
         first_movie_url=first_movie_url,
         last_movie_url=last_movie_url,
         prev_movie_url=prev_movie_url,
         next_movie_url=next_movie_url,
-        show_reviews_for_movie=movie_to_show_reviews
+        show_reviews_for_movie=movie_to_show_reviews,
+        watchbtn=watchbtn
+    )
+
+
+@movie_blueprint.route('/search', methods=['GET', 'POST'])
+def search_movie():
+    if 'user_name' in session:
+        watchbtn = "yes"
+        watched = services.get_watched(session['user_name'], repo.repo_instance)
+    else:
+        watchbtn = "no"
+        watched = []
+
+    none_found = request.args.get('none')
+    none_message = ""
+    if none_found == "True":
+        none_message = "No movies found for searched name. Are you sure you spelt it correctly?"
+    movies_per_page = 10
+
+    # Create form
+    form = SearchForm()
+
+    if form.validate_on_submit():
+        searchStr = form.search.data.title()
+        searchFor = form.searching_for.data
+
+        return redirect(url_for('movie_bp.browse', search=searchStr, type=searchFor))
+
+
+    # For a GET or an unsuccessful POST, retrieve the movie to review in dict form, and return a Web page that allows
+    # the user to enter a review. The generated Web page includes a form object.
+    return render_template(
+        'movie/search.html',
+        title='Search by actor or director',
+        form=form,
+        handler_url=url_for('movie_bp.search_movie'),
+        watched=watched,
+        watchbtn=watchbtn,
+        selected_movies=utilities.get_selected_movies(),
+        tag_urls=utilities.get_tags_and_urls(),
+        none_message=none_message
     )
 
 
@@ -249,3 +312,9 @@ class ReviewForm(FlaskForm):
     rating = SelectField('Rating', choices=[(1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"), (6, "6"), (7, "7"), (8, "8"), (9, "9"), (10, "10")])
     movie_id = HiddenField("Movie id")
     submit = SubmitField('Submit')
+
+
+class SearchForm(FlaskForm):
+    search = TextAreaField('Search', [DataRequired(), Length(min=1, message='Please enter a name')])
+    searching_for = SelectField('searchfor', choices=[("Actor", "Actor"), ("Director", "Director")])
+    submit = SubmitField('Search')

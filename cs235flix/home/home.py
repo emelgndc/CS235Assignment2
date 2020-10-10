@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template
-
 import cs235flix.utilities.utilities as utilities
 
 
@@ -11,6 +10,5 @@ home_blueprint = Blueprint(
 def home():
     return render_template(
         'home/home.html',
-        movies=utilities.get_movies(50),
         tag_urls=utilities.get_tags_and_urls()
     )
