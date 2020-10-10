@@ -211,7 +211,7 @@ def test_repository_does_not_add_a_review_without_an_movie_properly_attached(in_
 
 def test_repository_can_retrieve_reviews(in_memory_repo):
     #print(in_memory_repo.reviews)
-    assert len(in_memory_repo.get_reviews()) == 2
+    assert len(in_memory_repo.get_reviews()) == 4
 
 
 

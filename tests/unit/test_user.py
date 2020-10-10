@@ -1,7 +1,5 @@
 import pytest
-from domainmodel.movie import Movie
-from domainmodel.review import Review
-from domainmodel.user import User
+from cs235flix.domain.model import Movie, Review, User
 
 @pytest.fixture
 def user():

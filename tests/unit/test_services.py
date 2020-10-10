@@ -171,7 +171,7 @@ def test_get_reviews_for_movie(in_memory_repo):
     # Check that 2 reviews were returned for movie with id 2.
     assert len(reviews_as_dict) == 2
 
-    assert reviews_as_dict[1]['username'] == 'thorke'
+    assert reviews_as_dict[1]['user_name'] == 'thorke'
 
     # Check that the reviews relate to the movie whose id is 2.
     movie_ids = [review['movie_id'] for review in reviews_as_dict]

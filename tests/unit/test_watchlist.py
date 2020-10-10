@@ -1,6 +1,7 @@
 import pytest
-from domainmodel.movie import Movie
-from domainmodel.watchlist import WatchList
+from cs235flix.domain.model import Movie
+from cs235flix.domain.watchlist import WatchList
+
 
 @pytest.fixture
 def watchlist():

@@ -1,19 +1,16 @@
-from datetime import date
+from datetime import date, datetime
 
-from cs235flix.domain.model import User, Article, Tag, make_comment, make_tag_association, ModelException
+from cs235flix.domain.model import User, Movie, Tag, make_review, make_tag_association, ModelException
 
 import pytest
 
 
 @pytest.fixture()
-def article():
-    return Article(
-        date.fromisoformat('2020-03-15'),
-        'Coronavirus travel restrictions: Self-isolation deadline pushed back to give airlines breathing room',
-        'The self-isolation deadline has been pushed back',
-        'https://www.nzherald.co.nz/business/news/article.cfm?c_id=3&objectid=12316800',
-        'https://th.bing.com/th/id/OIP.0lCxLKfDnOyswQCF9rcv7AHaCz?w=344&h=132&c=7&o=5&pid=1.7'
-    )
+def movie():
+    movie = Movie("Barnacle Boy", 2020)
+    movie.director = "John Mack"
+    movie.description = "this guy is from spongebob"
+    return movie
 
 
 @pytest.fixture()
@@ -23,86 +20,76 @@ def user():
 
 @pytest.fixture()
 def tag():
-    return Tag('New Zealand')
+    return Tag('Spongebob Squarepants')
 
 
 def test_user_construction(user):
-    assert user.username == 'dbowie'
+    assert user.user_name == 'dbowie'
     assert user.password == '1234567890'
-    assert repr(user) == '<User dbowie 1234567890>'
+    assert repr(user) == '<User dbowie>'
 
-    for comment in user.comments:
-        # User should have an empty list of Comments after construction.
+    for review in user.reviews:
+        # User should have an empty list of Reviews after construction.
         assert False
 
 
-def test_article_construction(article):
-    assert article.id is None
-    assert article.date == date.fromisoformat('2020-03-15')
-    assert article.title == 'Coronavirus travel restrictions: Self-isolation deadline pushed back to give airlines breathing room'
-    assert article.first_para == 'The self-isolation deadline has been pushed back'
-    assert article.hyperlink == 'https://www.nzherald.co.nz/business/news/article.cfm?c_id=3&objectid=12316800'
-    assert article.image_hyperlink == 'https://th.bing.com/th/id/OIP.0lCxLKfDnOyswQCF9rcv7AHaCz?w=344&h=132&c=7&o=5&pid=1.7'
+def test_movie_construction(movie):
+    assert movie.title == 'Barnacle Boy'
+    assert movie.description == 'this guy is from spongebob'
+    assert movie.actors == []
+    assert movie.number_of_tags == 0
 
-    assert article.number_of_comments == 0
-    assert article.number_of_tags == 0
-
-    assert repr(
-        article) == '<Article 2020-03-15 Coronavirus travel restrictions: Self-isolation deadline pushed back to give airlines breathing room>'
+    assert repr(movie) == '<Movie Barnacle Boy, 2020, []>'
 
 
-def test_article_less_than_operator():
-    article_1 = Article(
-        date.fromisoformat('2020-03-15'), None, None, None, None
-    )
+def test_movie_less_than_operator():
+    movie_1 = Movie("abc", 2020)
 
-    article_2 = Article(
-        date.fromisoformat('2020-04-20'), None, None, None, None
-    )
+    movie_2 = Movie("def", 2019)
 
-    assert article_1 < article_2
+    assert movie_1 < movie_2
 
 
 def test_tag_construction(tag):
-    assert tag.tag_name == 'New Zealand'
+    assert tag.tag_name == 'Spongebob Squarepants'
 
-    for article in tag.tagged_articles:
+    for movie in tag.tagged_movies:
         assert False
 
-    assert not tag.is_applied_to(Article(None, None, None, None, None, None))
+    assert not tag.is_applied_to(Movie("Barnacle Boy", 2020))
 
 
-def test_make_comment_establishes_relationships(article, user):
-    comment_text = 'COVID-19 in the USA!'
-    comment = make_comment(comment_text, user, article)
+def test_make_review_establishes_relationships(movie, user):
+    review_text = 'Barnacle Boy in the USA!'
+    review = make_review(movie, review_text, 10, user, datetime.today())
 
-    # Check that the User object knows about the Comment.
-    assert comment in user.comments
+    # Check that the User object knows about the Review.
+    assert review in user.reviews
 
-    # Check that the Comment knows about the User.
-    assert comment.user is user
+    # Check that the Review knows about the User.
+    assert review.user is user
 
-    # Check that Article knows about the Comment.
-    assert comment in article.comments
+    # Check that Movie knows about the Review.
+    assert review in movie.reviews
 
-    # Check that the Comment knows about the Article.
-    assert comment.article is article
-
-
-def test_make_tag_associations(article, tag):
-    make_tag_association(article, tag)
-
-    # Check that the Article knows about the Tag.
-    assert article.is_tagged()
-    assert article.is_tagged_by(tag)
-
-    # check that the Tag knows about the Article.
-    assert tag.is_applied_to(article)
-    assert article in tag.tagged_articles
+    # Check that the Review knows about the Movie.
+    assert review.movie is movie
 
 
-def test_make_tag_associations_with_article_already_tagged(article, tag):
-    make_tag_association(article, tag)
+def test_make_tag_associations(movie, tag):
+    make_tag_association(movie, tag)
+
+    # Check that the Movie knows about the Tag.
+    assert movie.is_tagged()
+    assert movie.is_tagged_by(tag)
+
+    # check that the Tag knows about the Movie.
+    assert tag.is_applied_to(movie)
+    assert movie in tag.tagged_movies
+
+
+def test_make_tag_associations_with_movie_already_tagged(movie, tag):
+    make_tag_association(movie, tag)
 
     with pytest.raises(ModelException):
-        make_tag_association(article, tag)
+        make_tag_association(movie, tag)

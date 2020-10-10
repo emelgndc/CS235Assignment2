@@ -507,13 +507,13 @@ def make_review(movie: Movie, review_text: str, rating: int, user: User, timesta
     return review
 
 
-class MovieException(Exception):
+class ModelException(Exception):
     pass
 
 
 def make_tag_association(movie: Movie, tag: Tag):
     if tag.is_applied_to(movie):
-        raise MovieException(f'Tag {tag.tag_name} already applied to Movie "{movie.title}"')
+        raise ModelException(f'Tag {tag.tag_name} already applied to Movie "{movie.title}"')
 
     movie.add_tag(tag)
     tag.add_movie(movie)
