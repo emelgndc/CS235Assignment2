@@ -179,7 +179,7 @@ def load_movies_and_tags(data_path: str, repo: MemoryRepository):
 
     file.read_csv_file()
 
-    # Add movies to repo, and create tag associations TODO: are tags for actors/directors needed?
+    # Add movies to repo, and create tag associations
     for movie in file.dataset_of_movies:
         repo.add_movie(movie)
         for genre in movie.genres:

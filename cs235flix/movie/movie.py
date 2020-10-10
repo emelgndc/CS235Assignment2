@@ -5,7 +5,7 @@ from flask import request, render_template, redirect, url_for, session
 
 from better_profanity import profanity
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, HiddenField, SubmitField
+from wtforms import TextAreaField, HiddenField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Length, ValidationError
 
 import cs235flix.adapters.repository as repo
@@ -19,7 +19,6 @@ from cs235flix.authentication.authentication import login_required
 movie_blueprint = Blueprint(
     'movie_bp', __name__)
 
-#TODO: this
 
 @movie_blueprint.route('/browse', methods=['GET'])
 def browse():
@@ -191,8 +190,8 @@ def review_movie():
         # Extract the movie id, representing the reviewed movie, from the form.
         movie_id = int(form.movie_id.data)
 
-        # Use the service layer to store the new review. #TODO: allow user to change rating
-        services.add_review(movie_id, form.review.data, 5, username, repo.repo_instance)
+        # Use the service layer to store the new review.
+        services.add_review(movie_id, form.review.data, int(form.rating.data), username, repo.repo_instance)
 
         # Retrieve the movie in dict form.
         movie = services.get_movie(movie_id, repo.repo_instance)
@@ -247,5 +246,6 @@ class ReviewForm(FlaskForm):
         DataRequired(),
         Length(min=4, message='Your review is too short'),
         ProfanityFree(message='Your review must not contain profanity')])
+    rating = SelectField('Rating', choices=[(1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"), (6, "6"), (7, "7"), (8, "8"), (9, "9"), (10, "10")])
     movie_id = HiddenField("Movie id")
     submit = SubmitField('Submit')

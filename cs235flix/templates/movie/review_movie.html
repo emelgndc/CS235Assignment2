@@ -16,10 +16,17 @@
         </div>
         <div class="form-wrapper">
             <form action="{{handler_url}}" method="post">
-                {{form.movie_id}} <!-- Need to include this hidden field as it tracks the article being commented. -->
+                {{form.movie_id}} <!-- Need to include this hidden field as it tracks the movie being commented. -->
                 {{form.csrf_token}} <!-- Need to include this token - Flask WTForms requires it. -->
                 <br>
-                <div class ="form-field">{{form.review.label}} </br>{{form.review(size = 100, placeholder="type your review", class="textarea", cols="50", rows="6", wrap="hard")}}
+                <div class ="form-field">
+                    {{form.rating.label}}
+                    <br>
+                    {{form.rating(class="select")}}
+                    <br>
+                    {{form.review.label}}
+                    <br>
+                    {{form.review(size = 100, placeholder="type your review", class="textarea", cols="50", rows="6", wrap="hard")}}
                     {% if form.review.errors %}
                         <ul class="errors">
         	            {% for error in form.review.errors %}

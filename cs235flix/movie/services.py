@@ -50,23 +50,6 @@ def get_last_movie(repo: AbstractRepository):
     movie = repo.get_movie(repo.get_number_of_movies())
     return movie_to_dict(movie, id, repo)
 
-#TODO: needed?
-
-# def get_movies(repo: AbstractRepository):
-#     movies = repo.get_movies_by_id(target_date=date)
-#
-#     movies_dto = list()
-#     prev_date = next_date = None
-#
-#     if len(movies) > 0:
-#         #prev_id = repo.get_id_of_previous_movie(movies[0])
-#         #next_id = repo.get_id_of_next_movie(movies[0])
-#
-#         # Convert Movies to dictionary form.
-#         movies_dto = movies_to_dict(movies)
-#
-#     return movies_dto
-
 
 def get_movie_ids_for_tag(tag_name, repo: AbstractRepository):
     movie_ids = repo.get_movie_ids_for_tag(tag_name)

@@ -80,26 +80,26 @@ def test_review(client, auth):
 
     response = client.post(
         '/review',
-        data={'review_text': 'i liek garlic bread', 'movie_id': 2}
+        data={'review': 'i liek garlic bread', 'rating': 5, 'movie_id': 2}
     )
 
     # Check that we have been redirected to the correct page.
-    assert response.headers['Content-Length'] == '4618'
+    assert response.headers['Location'] == 'http://localhost/browse?cursor=0&view_reviews_for=2'
 
 
-@pytest.mark.parametrize(('review', 'messages'), (
-        ('Who thinks Trump is a fuckwit?', (b'Your review must not contain profanity')),
-        ('Hey', (b'Your review is too short')),
-        ('ass', (b'Your review is too short', b'Your review must not contain profanity')),
+@pytest.mark.parametrize(('review', 'rating', 'messages'), (
+        ('Who thinks Trump is a fuckwit?', '5', (b'Your review must not contain profanity')),
+        ('Hey', '3', (b'Your review is too short')),
+        ('ass', '10', (b'Your review is too short', b'Your review must not contain profanity')),
 ))
-def test_review_with_invalid_input(client, auth, review, messages):
+def test_review_with_invalid_input(client, auth, review, rating, messages):
     # Login a user.
     auth.login()
 
     # Attempt to review on an movie.
     response = client.post(
         '/review',
-        data={'review': review, 'movie_id': 2}
+        data={'review': review, 'rating': rating, 'movie_id': 2}
     )
     # Check that supplying invalid review text generates appropriate error messages.
     for message in messages:

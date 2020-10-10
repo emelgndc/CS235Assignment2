@@ -6,14 +6,8 @@
     endif %}
   </h2>
 
-  <div>
-    <h3>
-      <a class="btn-nav" href="{{ url_for('movie_bp.browse') }}">
-        Browse
-      </a>
-    </h3>
-  </div>
   <a class="btn-nav" href="{{ url_for('home_bp.home') }}">Home</a>
+  <h3><a class="btn-nav" href="{{ url_for('movie_bp.browse') }}">Browse</a></h3>
   <a class="btn-nav" href="{{ url_for('authentication_bp.register') }}">Register</a>
   <a class="btn-nav" href="{{ url_for('authentication_bp.login') }}">Login</a>
   <a class="btn-nav" href="{{ url_for('authentication_bp.logout') }}">Logout</a>

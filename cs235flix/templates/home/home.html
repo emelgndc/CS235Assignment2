@@ -2,23 +2,15 @@
 {% block content %}
 <main id="main">
   <p>
-    This is a movie database. Click on 'Browse' to look through our collection.
+    This is a movie database.
+    <br>
+    Click on 'Browse' to look through our collection.
+    <br>
+    Alternatively, click on one of the tags below to browse movies by their genre.
   </p>
   <p style="text-align: right; font-style: italic;">
     this is working poggers
   </p>
-  {% for movie in movies %}
-  <p>{{movie.director.director_full_name}}</p>
-  <h2>{{movie.title}}, {{movie.year}}</h2>
-  <p>{{movie.description}}</p>
-  <p>{{movie.year}}</p>
-  <p>{{movie.length}} minutes</p>
-  <p>
-    {% for genre in movie.genres %}
-      {{genre}}
-    {% endfor %}
-  </p>
-  <br>
-  {% endfor %}
+
 </main>
 {% endblock %}
