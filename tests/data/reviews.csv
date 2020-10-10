@@ -1,3 +1,5 @@
 id,user-id,movie-id,review-text,rating,timestamp
 1,2,1,I LOVE THIS MOVIE!!!,5,2020-02-28
 2,1,1,doo doo actors,1,2020-02-28
+3,1,2,prometheus review here,10,2020-02-28
+4,1,2,another prometheus review,9,2020-02-28

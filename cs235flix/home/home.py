@@ -11,6 +11,6 @@ home_blueprint = Blueprint(
 def home():
     return render_template(
         'home/home.html',
-        movies=utilities.get_movies(50)
-        #tag_urls=utilities.get_tags_and_urls()
+        movies=utilities.get_movies(50),
+        tag_urls=utilities.get_tags_and_urls()
     )

@@ -35,39 +35,37 @@ def get_movie(movie_id: int, repo: AbstractRepository):
     if movie is None:
         raise NonExistentMovieException
 
-    return movie_to_dict(movie, movie_id)
+    return movie_to_dict(movie, movie_id, repo)
 
 
 def get_first_movie(repo: AbstractRepository):
 
     movie = repo.get_movie(1)
 
-    return movie_to_dict(movie)
+    return movie_to_dict(movie, 1, repo)
 
 
 def get_last_movie(repo: AbstractRepository):
-
+    id = repo.get_number_of_movies()
     movie = repo.get_movie(repo.get_number_of_movies())
-    return movie_to_dict(movie)
+    return movie_to_dict(movie, id, repo)
 
-#TODO: this stuff
+#TODO: needed?
 
-# def get_movies_by_genre(date, repo: AbstractRepository):
-#     # Returns movies for the target date (empty if no matches), the date of the previous movie (might be null), the date of the next movie (might be null)
-#
-#     movies = repo.get_movies_by_date(target_date=date)
+# def get_movies(repo: AbstractRepository):
+#     movies = repo.get_movies_by_id(target_date=date)
 #
 #     movies_dto = list()
 #     prev_date = next_date = None
 #
 #     if len(movies) > 0:
-#         prev_date = repo.get_date_of_previous_movie(movies[0])
-#         next_date = repo.get_date_of_next_movie(movies[0])
+#         #prev_id = repo.get_id_of_previous_movie(movies[0])
+#         #next_id = repo.get_id_of_next_movie(movies[0])
 #
 #         # Convert Movies to dictionary form.
 #         movies_dto = movies_to_dict(movies)
 #
-#     return movies_dto, prev_date, next_date
+#     return movies_dto
 
 
 def get_movie_ids_for_tag(tag_name, repo: AbstractRepository):
@@ -80,7 +78,7 @@ def get_movies_by_id(id_list, repo: AbstractRepository):
     movies = repo.get_movies_by_id(id_list)
 
     # Convert Movies to dictionary form.
-    movies_as_dict = movies_to_dict(movies)
+    movies_as_dict = movies_to_dict(movies, id_list, repo)
 
     return movies_as_dict
 
@@ -98,7 +96,7 @@ def get_reviews_for_movie(movie_id, repo: AbstractRepository):
 # Functions to convert model entities to dicts
 # ============================================
 
-def movie_to_dict(movie: Movie, movie_id: int):
+def movie_to_dict(movie: Movie, movie_id: int, repo: AbstractRepository):
     movie_dict = {
         'id': movie_id,
         'year': movie.release_year,
@@ -107,19 +105,24 @@ def movie_to_dict(movie: Movie, movie_id: int):
         'director': movie.director,
         'actors': movie.actors,
         'length': movie.runtime_minutes,
-        'reviews': reviews_to_dict(movie.reviews),
-        'tags': tags_to_dict(movie.tags)
+        'reviews': reviews_to_dict(movie.reviews, movie_id),
+        'tags': tags_to_dict(movie.tags, movie_id, repo)
     }
     return movie_dict
 
 
-def movies_to_dict(movies: Iterable[Movie], movie_id: int):
-    return [movie_to_dict(movie, movie_id) for movie in movies]
+def movies_to_dict(movies: Iterable[Movie], movie_ids, repo: AbstractRepository):
+    returnlist = []
+    index = 0
+    for movie in movies:
+        returnlist.append(movie_to_dict(movie, movie_ids[index], repo))
+        index += 1
+    return returnlist
 
 
 def review_to_dict(review: Review, movie_id: int):
     review_dict = {
-        'username': review.user.user_name,
+        'user_name': review.user.user_name,
         'movie_id': movie_id,
         'review_text': review.review_text,
         'rating': review.rating,
@@ -132,16 +135,16 @@ def reviews_to_dict(reviews: Iterable[Review], movie_id: int):
     return [review_to_dict(review, movie_id) for review in reviews]
 
 
-def tag_to_dict(tag: Tag):
+def tag_to_dict(tag: Tag, movie_id: int, repo: AbstractRepository):
     tag_dict = {
         'name': tag.tag_name,
-        'tagged_movies': [movie.id for movie in tag.tagged_movies]
+        'tagged_movies': [repo.movie_index(movie) for movie in tag.tagged_movies]
     }
     return tag_dict
 
 
-def tags_to_dict(tags: Iterable[Tag]):
-    return [tag_to_dict(tag) for tag in tags]
+def tags_to_dict(tags: Iterable[Tag], movie_id: int, repo: AbstractRepository):
+    return [tag_to_dict(tag, movie_id, repo) for tag in tags]
 
 
 # ============================================

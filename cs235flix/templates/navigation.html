@@ -12,20 +12,20 @@
 
 <!--  <div>-->
 <!--    <h3>-->
-<!--      {#<a class="btn-nav" href="{{ url_for('news_bp.articles_by_date') }}">#}-->
-<!--        Browse timeline-->
+<!--      {#<a class="btn-nav" href="{{ url_for('movie_bp.movies_by_id') }}">#}-->
+<!--        Browse-->
 <!--      </a>-->
 <!--    </h3>-->
 <!--  </div>-->
 
   <div>
-    <h3 id="sub-nav-header">Browse by tag</h3>
+    <h3 id="sub-nav-header">Browse by tag:</h3>
     {% for key in tag_urls %}
-      <a class="btn-nav" href="{{ tag_urls[key] }}">{{ key }}</a>
+      {% if loop.index is divisibleby 2 %}
+        <a class="btn-navright" href="{{ tag_urls[key] }}">{{ key }}</a>
+      {% else %}
+        <a class="btn-navleft" href="{{ tag_urls[key] }}">{{ key }}</a>
+      {% endif %}
     {% endfor %}
-  </div>
-
-  <div id="nav-footer">
-    COMPSCI 235 Software Development Methodologies
   </div>
 </nav>

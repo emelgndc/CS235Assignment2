@@ -132,6 +132,10 @@ class AbstractRepository(abc.ABC):
         """ Returns the reviews stored in the repository. """
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def movie_index(self, movie: Movie):
+        """ Returns the index of movie stored in the repository. """
+        raise NotImplementedError
 
 
 

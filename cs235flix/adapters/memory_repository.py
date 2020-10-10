@@ -160,7 +160,6 @@ class MemoryRepository(AbstractRepository):
         return ValueError
 
 
-
 def read_csv_file(filename: str):
     with open(filename, encoding='utf-8-sig') as infile:
         reader = csv.reader(infile)
@@ -208,7 +207,7 @@ def load_users(data_path: str, repo: MemoryRepository):
 
 
 def load_reviews(data_path: str, repo: MemoryRepository, users):
-    for data_row in read_csv_file(os.path.join(data_path, 'comments.csv')):
+    for data_row in read_csv_file(os.path.join(data_path, 'reviews.csv')):
         review = make_review(
             movie=repo.get_movie(int(data_row[2])),
             review_text=data_row[3],

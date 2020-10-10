@@ -48,12 +48,12 @@ img {
 }
 
 .btn-nav:hover {
-  background-color: #594f8d;
+  background-color: #8594c4;
   color: #fff;
 }
 
 .btn-general {
-    background-color: #7532cd;
+    background-color: #5167ac;
     color: white;
     border: none;
     border-radius: 8px;
@@ -61,6 +61,38 @@ img {
     padding: 10px;
     margin: 5px;
     float:left;
+}
+
+.btn-navleft {
+    background-color: #5167ac;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 10px;
+    margin: 2px;
+    float:left;
+}
+
+.btn-navright {
+    background-color: #5167ac;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 10px;
+    margin: 2px;
+    float:right;
+}
+
+.btn-navleft:hover {
+  background-color: #8594c4;
+  color: #fff;
+}
+
+.btn-navright:hover {
+  background-color: #8594c4;
+  color: #fff;
 }
 
 .btn-general-disabled {
@@ -75,7 +107,7 @@ img {
 }
 
 .btn-general:hover {
-    background-color: #8acd32;
+    background-color: #8594c4;
     color: black;
 }
 
@@ -115,7 +147,7 @@ img {
 #nav {
   width: 200px;
   height: 100%;
-  background: #7532cd;
+  background: #5167ac;
   padding: 30px 0px;
   position: fixed;
 }
@@ -139,7 +171,6 @@ img {
   color: #fff;
   margin-top: 25px;
   margin-bottom: 20px;
-  position: absolute;
   bottom: 0;
   font-size: small;
   text-align: center;
@@ -168,22 +199,22 @@ img {
     border-bottom: 1px solid #e0e4e8;
 }
 
-#article-header {
+#movie-header {
     text-align: left;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
-#article {
+#movie {
     clear:both;
     margin-bottom:100px;
 }
 
-#article-footer {
+#movie-footer {
     font-size: 32px;
 }
 
-#article-container {
+#movie-container {
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -214,7 +245,7 @@ input[type='password'],
 
 input[type='submit'] {
     width: 100%;
-     background-color: #7532cd;
+     background-color: #5167ac;
      color: white;
      padding: 14px 20px;
      margin: 8px 0;
@@ -224,7 +255,7 @@ input[type='submit'] {
 }
 
 input[type='submit']:hover {
-    background-color: #8acd32;
+    background-color: #8594c4;
     color: black;
 }
 
