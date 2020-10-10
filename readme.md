@@ -15,7 +15,7 @@ $ venv\Scripts\activate
 $ pip install -r requirements.txt
 ```
 
-When using PyCharm, set the virtual environment using 'File'->'Settings' and select 'Project:COMPSCI-235' from the left menu. Select 'Project Interpreter', click on the gearwheel button and select 'Add'. Click the 'Existing environment' radio button to select the virtual environment. 
+When using PyCharm, set the virtual environment using 'File'->'Settings' and select 'Project:CS235Assignment2' from the left menu. Select 'Project Interpreter', click on the gearwheel button and select 'Add'. Click the 'Existing environment' radio button to select the virtual environment. 
 
 ## Execution
 
